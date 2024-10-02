@@ -1,0 +1,11 @@
+{
+  "name": "shopapp_backend",
+  "version": "1.0.0",
+  "description": "This is for training purpose",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Duong Trung Thanh",
+  "license": "ISC"
+}

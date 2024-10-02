@@ -1,0 +1,36 @@
+services:
+  mysql:
+    container_name: shopapp_mysql
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: taolathanh1
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - shop-app
+    restart: unless-stopped
+
+  phpmyadmin:
+    container_name: shopapp_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: shopapp_mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 500M
+    ports:
+      - 8100:80
+    networks:
+      - shop-app
+    restart: unless-stopped
+
+
+networks:
+  shop-app:
+    driver: bridge
+
+volumes:
+  mysql:
+  phpmyadmin:
+
