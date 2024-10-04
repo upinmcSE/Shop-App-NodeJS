@@ -22,9 +22,12 @@
  * npx sequelize-cli db:migrate:undo
  * npx sequelize-cli db:migrate:undo:all
  * 
- * npm add express: thư viện backend express
- * npm add dotenv nodemon : nodemon : thay đổi đến đâu thì app thay đổi đến đấy
- * npm add --dev @babel/core @babel/node @babel/preset-env
+ * npm i express: thư viện backend express
+ * npm i dotenv nodemon : nodemon : thay đổi đến đâu thì app thay đổi đến đấy
+ * npm i --dev @babel/core @babel/node @babel/preset-env
+ * 
+ * npm i joi : Thư viện dùng đê validate request
+ * 
  */
 
 // const express = require('express')
@@ -35,11 +38,18 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const app = express()
+app.use(express.json())
+express.urlencoded({ extended: true })
+const port = process?.env?.PORT ?? 3000;
 
+
+import { AppRoute } from './AppRoute'
+
+AppRoute(app)
 app.get("/", (req, res) => {
     res.send("ahha")
 })
 
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
 
 })
