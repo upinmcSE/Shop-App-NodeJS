@@ -1,11 +1,44 @@
-import { Sequelize } from "sequelize"
+import { Sequelize, where } from "sequelize"
 import db from "../models"
 
+const {Op} = Sequelize
+
 export async function getProducts(req, res) {
-    const products = await db.Product.findAll()
-    res.status(200).json({
+    // const products = await db.Product.findAll() not good must paging
+
+    // search and paging
+    const {search ='', page =1} = req.query
+    const pageSize = 5
+    const offset = (page - 1) * pageSize // trang dau 5 sp thi trang 2 se bat dau tu sp 6
+
+    let whereCase = {}
+    if(search.trim() != ''){
+        whereCase = { // đoạn code này sẽ biên dịch thành công lệnh where trong sql
+            [Op.or]: [
+                {name: { [Op.like]: `%${search}%`}},
+                {description: { [Op.like]: `%${search}%`}},
+                {specification: { [Op.like]: `%${search}%`}} 
+            ]
+        }
+    }
+    const [products, totalProducts] = await Promise.all([
+        db.Product.findAll({
+            where: whereCase,
+            limit: pageSize,
+            offset: offset
+        }),
+        db.Product.count({
+            where: whereCase
+        })
+    ])
+
+
+    return res.status(200).json({
         message: "Lay danh sach san pham thanh cong",
-        data: products
+        data: products,
+        currentPage: parseInt(page, 10),
+        totalPages: Math.ceil(totalProducts / pageSize),
+        totalProducts
     })
 }
 
